@@ -23,6 +23,6 @@ app.get("/api/", (request, response) => {
   response.status(200).json({ message: "Server's up" });
 });
 
-const port = process.env.NODE_PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Server running on ${port}`));
