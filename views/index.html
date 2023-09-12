@@ -1,0 +1,30 @@
+<svg width="500" height="200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject x="0" y="0" width="500" height="200">
+    <div>
+      <ul id="articles">
+      </ul>
+    </div>
+  </foreignObject>
+</svg>
+
+<script>
+  function fetchArticles() {
+    fetch('https://dev.to/api/articles?username=cherryramatis')
+      .then(res => res.json())
+      .then(data => {
+        const articleList = document.getElementById('articles')
+
+        data.forEach(article => {
+          const listItem = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = article.url;
+          link.textContent = article.title;
+
+          listItem.appendChild(link);
+          articleList.appendChild(listItem);
+        })
+      })
+  }
+
+  window.addEventListener('load', fetchArticles)
+</script>
