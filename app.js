@@ -20,14 +20,12 @@ app.get("/stats", async (_req, res) => {
   const nome = _req.query.nome;
   
   try {
-    console.log('oiiiiiiiii')
     const response = await fetch(`https://dev.to/api/articles?username=${usuario}`)
     const data = await response.json()
-    console.log(data)
     res.render('articles', { articles: data, total: data.length, nome })
   }catch (error) {
     console.error(error);
-    res.render('gerador', { error: 'Ocorreu um erro ao buscar os dados.' });
+    res.render('gerador', { error: 'Ocorreu um erro ao buscar os dados. Tente novamente.' });
   }
 });
 
