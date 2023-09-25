@@ -28,22 +28,30 @@ app.get("/stats", async (_req, res) => {
   }
 });
 
-app.get("/100diasdecodigo", (req, res) => {
-  const finishedDays = 72
-  const name = req.query.username;
+app.get("/100diasdecodigo", async (req, res) => {
+  const user = req.query.username;
 
-  res.setHeader("content-type", "image/svg+xml; charset=utf-8");
-  res.setHeader("cache-control", "no-cache, max-age=0");
+  if (!user) return;
 
-  res.render('100diasdecodigo', {
-    finishedDays,
-    daysFinishedPercentage: (finishedDays / 100) * 250,
-    name,
-    totalLikes: 8000,
-    totalViews: 180000,
-    totalReplies: 20000,
-    maxStreak: 18
-  })
+  try {
+    const response = await fetch(`http://20.201.112.54:8001/api/users/find/${user}`).then(data => data.json())
+
+    res.setHeader("content-type", "image/svg+xml; charset=utf-8");
+    res.setHeader("cache-control", "no-cache, max-age=0");
+
+    res.render('100diasdecodigo', {
+      finishedDays: response.days_participated || 0,
+      daysFinishedPercentage: response.days_participated ? (response.days_participated / 100) * 250 : 0,
+      name: response.name || '',
+      totalLikes: response.statistics.total_likes || 0,
+      totalViews: response.statistics.total_views || 0,
+      totalReplies: response.statistics.total_replies || 0,
+      maxStreak: response.statistics.max_streak || 0,
+    })
+  } catch(error) {
+    console.error(error);
+  }
+
 })
 
 const port = process.env.PORT || 3000;
